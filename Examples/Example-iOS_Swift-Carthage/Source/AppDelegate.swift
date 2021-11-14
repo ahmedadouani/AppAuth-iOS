@@ -16,7 +16,7 @@
 //  limitations under the License.
 //
 
-import AppAuth
+import AppAuthWB
 import UIKit
 
 @UIApplicationMain

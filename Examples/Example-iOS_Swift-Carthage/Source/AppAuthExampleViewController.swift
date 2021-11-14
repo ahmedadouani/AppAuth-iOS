@@ -16,7 +16,7 @@
 //  limitations under the License.
 //
 
-import AppAuth
+import AppAuthWB
 import UIKit
 
 typealias PostRegistrationCallback = (_ configuration: OIDServiceConfiguration?, _ registrationResponse: OIDRegistrationResponse?) -> Void

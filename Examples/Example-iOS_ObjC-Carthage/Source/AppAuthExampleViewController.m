@@ -19,7 +19,7 @@
 #import "AppAuthExampleViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
-#import <AppAuth/AppAuth.h>
+#import <AppAuthWB/AppAuth.h>
 
 #import "AppDelegate.h"
 

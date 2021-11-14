@@ -21,7 +21,7 @@ import PackageDescription
 */
 
 let package = Package(
-    name: "AppAuth",
+    name: "AppAuthWB",
     platforms: [
         .macOS(.v10_10),
         .iOS(.v8),
@@ -33,8 +33,8 @@ let package = Package(
             name: "AppAuthCore",
             targets: ["AppAuthCore"]),
         .library(
-            name: "AppAuth",
-            targets: ["AppAuth"]),
+            name: "AppAuthWB",
+            targets: ["AppAuthWB"]),
         .library(
 	        name: "AppAuthEnterpriseUserAgent",
 	        targets: ["AppAuthEnterpriseUserAgent"]),
@@ -50,7 +50,7 @@ let package = Package(
             publicHeadersPath: ""
         ),
         .target(
-            name: "AppAuth",
+            name: "AppAuthWB",
             dependencies: ["AppAuthCore"],
             path: "Source/AppAuth",
             sources: ["iOS", "macOS"],
