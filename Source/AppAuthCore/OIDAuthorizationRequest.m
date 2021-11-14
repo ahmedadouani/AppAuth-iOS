@@ -24,6 +24,8 @@
 #import "OIDTokenUtilities.h"
 #import "OIDURLQueryComponent.h"
 
+#import <CommonCrypto/CommonDigest.h>
+
 /*! @brief The key for the @c configuration property for @c NSSecureCoding
  */
 static NSString *const kConfigurationKey = @"configuration";
@@ -58,6 +60,10 @@ static NSString *const kStateKey = @"state";
 /*! @brief Key used to encode the @c nonce property for @c NSSecureCoding, and on the URL request.
  */
 static NSString *const kNonceKey = @"nonce";
+
+/*! @brief Key used to encode the @c raw nonce property for @c NSSecureCoding, and on the URL request.
+ */
+static NSString *const kRawNonceKey = @"rawNonce";
 
 /*! @brief Key used to encode the @c codeVerifier property for @c NSSecureCoding.
  */
@@ -130,6 +136,7 @@ NSString *const OIDOAuthorizationRequestCodeChallengeMethodS256 = @"S256";
             responseType:(NSString *)responseType
                    state:(nullable NSString *)state
                    nonce:(nullable NSString *)nonce
+                rawNonce:(nullable NSString *)rawNonce
             codeVerifier:(nullable NSString *)codeVerifier
            codeChallenge:(nullable NSString *)codeChallenge
      codeChallengeMethod:(nullable NSString *)codeChallengeMethod
@@ -149,6 +156,7 @@ NSString *const OIDOAuthorizationRequestCodeChallengeMethodS256 = @"S256";
     }
     _state = [state copy];
     _nonce = [nonce copy];
+    _rawNonce = [rawNonce copy];
     _codeVerifier = [codeVerifier copy];
     _codeChallenge = [codeChallenge copy];
     _codeChallengeMethod = [codeChallengeMethod copy];
@@ -159,6 +167,20 @@ NSString *const OIDOAuthorizationRequestCodeChallengeMethodS256 = @"S256";
   return self;
 }
 
+/*
+-(NSString*)sha256HashFor:(NSString*)input {
+    const char* str = [input UTF8String];
+    unsigned char result[CC_SHA256_DIGEST_LENGTH];
+    CC_SHA256(str, strlen(str), result);
+
+    NSMutableString *ret = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH*2];
+    for(int i = 0; i<CC_SHA256_DIGEST_LENGTH; i++)
+    {
+        [ret appendFormat:@"%02x",result[i]];
+    }
+    return ret;
+}
+*/
 - (instancetype)
    initWithConfiguration:(OIDServiceConfiguration *)configuration
                 clientId:(NSString *)clientID
@@ -172,6 +194,9 @@ NSString *const OIDOAuthorizationRequestCodeChallengeMethodS256 = @"S256";
   NSString *codeVerifier = [[self class] generateCodeVerifier];
   NSString *codeChallenge = [[self class] codeChallengeS256ForVerifier:codeVerifier];
 
+  NSString* rawNonce = [[self class] generateState];
+  NSString* nonce= [[self class] nonceS256ForRawNonce:rawNonce];
+  
   return [self initWithConfiguration:configuration
                             clientId:clientID
                         clientSecret:clientSecret
@@ -179,7 +204,8 @@ NSString *const OIDOAuthorizationRequestCodeChallengeMethodS256 = @"S256";
                          redirectURL:redirectURL
                         responseType:responseType
                                state:[[self class] generateState]
-                               nonce:[[self class] generateState]
+                               nonce:nonce
+                            rawNonce:rawNonce
                         codeVerifier:codeVerifier
                        codeChallenge:codeChallenge
                  codeChallengeMethod:OIDOAuthorizationRequestCodeChallengeMethodS256
@@ -229,6 +255,7 @@ NSString *const OIDOAuthorizationRequestCodeChallengeMethodS256 = @"S256";
   NSURL *redirectURL = [aDecoder decodeObjectOfClass:[NSURL class] forKey:kRedirectURLKey];
   NSString *state = [aDecoder decodeObjectOfClass:[NSString class] forKey:kStateKey];
   NSString *nonce = [aDecoder decodeObjectOfClass:[NSString class] forKey:kNonceKey];
+  NSString *rawNonce = [aDecoder decodeObjectOfClass:[NSString class] forKey:kRawNonceKey];
   NSString *codeVerifier = [aDecoder decodeObjectOfClass:[NSString class] forKey:kCodeVerifierKey];
   NSString *codeChallenge =
       [aDecoder decodeObjectOfClass:[NSString class] forKey:kCodeChallengeKey];
@@ -250,6 +277,7 @@ NSString *const OIDOAuthorizationRequestCodeChallengeMethodS256 = @"S256";
                         responseType:responseType
                                state:state
                                nonce:nonce
+                            rawNonce:rawNonce
                         codeVerifier:codeVerifier
                        codeChallenge:codeChallenge
                  codeChallengeMethod:codeChallengeMethod
@@ -300,6 +328,23 @@ NSString *const OIDOAuthorizationRequestCodeChallengeMethodS256 = @"S256";
   // NB. the ASCII conversion on the code_verifier entropy was done at time of generation.
   NSData *sha256Verifier = [OIDTokenUtilities sha256:codeVerifier];
   return [OIDTokenUtilities encodeBase64urlNoPadding:sha256Verifier];
+}
+
++ (nullable NSString *)nonceS256ForRawNonce:(NSString *)rawNonce {
+  if (!rawNonce) {
+    return nil;
+  }
+  const char* str = [rawNonce UTF8String];
+  unsigned char result[CC_SHA256_DIGEST_LENGTH];
+  uint32_t strLen = (uint32_t)strlen(str);
+  CC_SHA256(str, strLen, result);
+
+  NSMutableString *ret = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH*2];
+  for(int i = 0; i<CC_SHA256_DIGEST_LENGTH; i++)
+  {
+      [ret appendFormat:@"%02x",result[i]];
+  }
+  return ret;
 }
 
 #pragma mark -

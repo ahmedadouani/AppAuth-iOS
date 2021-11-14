@@ -77,6 +77,10 @@ static NSString *const kTestState = @"State";
  */
 static NSString *const kTestNonce = @"Nonce";
 
+/*! @brief Test value for the @c raw nonce property.
+ */
+static NSString *const kTestRawNonce = @"RawNonce";
+
 /*! @brief Test value for the @c codeVerifier property.
  */
 static NSString *const kTestCodeVerifier = @"code verifier";
@@ -157,6 +161,7 @@ static int const kCodeVerifierRecommendedLength = 43;
                   responseType:kTestResponseType
                          state:kTestState
                          nonce:kTestNonce
+                      rawNonce:kTestRawNonce
                   codeVerifier:kTestCodeVerifier
                  codeChallenge:[[self class] codeChallenge]
            codeChallengeMethod:[[self class] codeChallengeMethod]
@@ -175,6 +180,7 @@ static int const kCodeVerifierRecommendedLength = 43;
                   responseType:OIDResponseTypeCode
                          state:kTestState
                          nonce:kTestNonce
+                      rawNonce:kTestRawNonce
                   codeVerifier:kTestCodeVerifier
                  codeChallenge:[[self class] codeChallenge]
            codeChallengeMethod:[[self class] codeChallengeMethod]
@@ -193,6 +199,7 @@ static int const kCodeVerifierRecommendedLength = 43;
                   responseType:OIDResponseTypeCode
                          state:kTestState
                          nonce:kTestNonce
+                      rawNonce:kTestRawNonce
                   codeVerifier:kTestCodeVerifier
                  codeChallenge:[[self class] codeChallenge]
            codeChallengeMethod:[[self class] codeChallengeMethod]
@@ -258,6 +265,7 @@ static int const kCodeVerifierRecommendedLength = 43;
   XCTAssertEqualObjects(request.redirectURL, [NSURL URLWithString:kTestRedirectURL], @"");
   XCTAssertEqualObjects(request.state, kTestState, @"");
   XCTAssertEqualObjects(request.nonce, kTestNonce, @"");
+  XCTAssertEqualObjects(request.rawNonce, kTestRawNonce, @"");
   XCTAssertEqualObjects(request.codeVerifier, kTestCodeVerifier, @"");
   XCTAssertEqualObjects(request.codeChallenge, [[self class] codeChallenge], @"");
   XCTAssertEqualObjects(request.codeChallengeMethod, [[self class] codeChallengeMethod], @"");
@@ -454,6 +462,7 @@ static int const kCodeVerifierRecommendedLength = 43;
                   responseType:@"code id_token"
                          state:kTestState
                          nonce:kTestNonce
+                      rawNonce:kTestRawNonce
                   codeVerifier:kTestCodeVerifier
                  codeChallenge:[[self class] codeChallenge]
            codeChallengeMethod:[[self class] codeChallengeMethod]
@@ -470,6 +479,7 @@ static int const kCodeVerifierRecommendedLength = 43;
                   responseType:@"id_token code"
                          state:kTestState
                          nonce:kTestNonce
+                      rawNonce:kTestRawNonce
                   codeVerifier:kTestCodeVerifier
                  codeChallenge:[[self class] codeChallenge]
            codeChallengeMethod:[[self class] codeChallengeMethod]
@@ -485,6 +495,7 @@ static int const kCodeVerifierRecommendedLength = 43;
                   responseType:@"code token id_token"
                          state:kTestState
                          nonce:kTestNonce
+                      rawNonce:kTestRawNonce
                   codeVerifier:kTestCodeVerifier
                  codeChallenge:[[self class] codeChallenge]
            codeChallengeMethod:[[self class] codeChallengeMethod]
@@ -500,6 +511,7 @@ static int const kCodeVerifierRecommendedLength = 43;
                   responseType:@"token"
                          state:kTestState
                          nonce:kTestNonce
+                      rawNonce:kTestRawNonce
                   codeVerifier:kTestCodeVerifier
                  codeChallenge:[[self class] codeChallenge]
            codeChallengeMethod:[[self class] codeChallengeMethod]
@@ -515,6 +527,7 @@ static int const kCodeVerifierRecommendedLength = 43;
                   responseType:@"code"
                          state:kTestState
                          nonce:kTestNonce
+                      rawNonce:kTestRawNonce
                   codeVerifier:kTestCodeVerifier
                  codeChallenge:[[self class] codeChallenge]
            codeChallengeMethod:[[self class] codeChallengeMethod]

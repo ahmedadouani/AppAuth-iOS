@@ -30,6 +30,7 @@
              responseType:(NSString *)responseType
                     state:(nullable NSString *)state
                     nonce:(nullable NSString *)nonce
+                 rawNonce:(nullable NSString *)rawNonce
              codeVerifier:(nullable NSString *)codeVerifier
             codeChallenge:(nullable NSString *)codeChallenge
       codeChallengeMethod:(nullable NSString *)codeChallengeMethod
@@ -50,6 +51,7 @@
                          responseType:responseType
                                 state:state
                                 nonce:nonce
+                             rawNonce:nonce
                          codeVerifier:codeVerifier
                         codeChallenge:codeChallenge
                   codeChallengeMethod:codeChallengeMethod

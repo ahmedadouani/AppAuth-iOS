@@ -107,6 +107,13 @@ extern NSString *const OIDOAuthorizationRequestCodeChallengeMethodS256;
  */
 @property(nonatomic, readonly, nullable) NSString *nonce;
 
+/*! @brief String value used to generate the nonce value : nonce <= sha256 of (rawNonce).
+    @remarks rawNonce
+    @discussion This raw value is needed to prove to third party the origin of id Token generation.
+    @see https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+ */
+@property(nonatomic, readonly, nullable) NSString *rawNonce;
+
 /*! @brief The PKCE code verifier.
     @remarks code_verifier
     @discussion The code verifier itself is not included in the authorization request that is sent
@@ -209,6 +216,7 @@ extern NSString *const OIDOAuthorizationRequestCodeChallengeMethodS256;
              responseType:(NSString *)responseType
                     state:(nullable NSString *)state
                     nonce:(nullable NSString *)nonce
+                 rawNonce:(nullable NSString *)rawNonce
              codeVerifier:(nullable NSString *)codeVerifier
             codeChallenge:(nullable NSString *)codeChallenge
       codeChallengeMethod:(nullable NSString *)codeChallengeMethod
@@ -244,6 +252,13 @@ extern NSString *const OIDOAuthorizationRequestCodeChallengeMethodS256;
     @see https://tools.ietf.org/html/rfc7636#section-4.1
  */
 + (nullable NSString *)codeChallengeS256ForVerifier:(nullable NSString *)codeVerifier;
+
+/*! @brief generate the nonce value : nonce <= sha256 of (rawNonce).
+    @remarks rawNonce
+    @discussion As we generate the nonce from the raw value, we can prove to third party the origin of id Token generation.
+    @see https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+ */
++ (nullable NSString *)nonceS256ForRawNonce:(nullable NSString *)rawNonce;
 
 @end
 
